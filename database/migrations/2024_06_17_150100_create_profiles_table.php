@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('third_name')->default('');
             $table->string('phone')->default('');
             $table->unsignedSmallInteger('status')->default(1);
-            $table->unsignedSmallInteger('age')->nullable();
-            $table->string('login')->unique();
+            $table->date('birthday')->nullable();
+            $table->string('login')->nullable()->unique();
             $table->timestamps();
         });
     }

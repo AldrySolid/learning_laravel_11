@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->unsignedBigInteger('ref_author_id');
-            $table->integer('views')->default(0);
+            $table->unsignedBigInteger('author');
+            $table->integer('count_views')->default(0);
             $table->boolean('is_commentable')->default(true);
             $table->timestamps();
         });
