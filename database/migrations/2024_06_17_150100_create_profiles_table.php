@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('author');
             $table->string('first_name')->default('');
             $table->string('second_name')->default('');
             $table->string('third_name')->default('');

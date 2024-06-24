@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('author');
             $table->string('parent_class');
             $table->unsignedBigInteger('parent_id');
-            $table->unsignedBigInteger('author');
             $table->text('content');
             $table->unsignedInteger('count_likes');
             $table->unsignedSmallInteger('status')->default(1);

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('author');
             $table->string('title');
             $table->text('content');
-            $table->unsignedBigInteger('author');
             $table->integer('count_views')->default(0);
             $table->boolean('is_commentable')->default(true);
             $table->timestamps();
