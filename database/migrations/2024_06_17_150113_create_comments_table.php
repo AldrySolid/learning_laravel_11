@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('parent_class');
             $table->unsignedBigInteger('parent_id');
             $table->text('content');
-            $table->unsignedInteger('count_likes');
+            $table->unsignedInteger('count_likes')->default(0);
             $table->unsignedSmallInteger('status')->default(1);
             $table->timestamps();
         });

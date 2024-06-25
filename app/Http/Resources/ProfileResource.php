@@ -15,15 +15,15 @@ class ProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id',
-            'author',
-            'first_name',
-            'second_name',
-            'third_name',
-            'phone',
-            'status',
-            'birthday',
-            'login',
+            'id'          => $this->id,
+            'author'      => $this->author,
+            'first_name'  => $this->first_name,
+            'second_name' => $this->second_name,
+            'third_name'  => $this->third_name,
+            'phone'       => $this->phone,
+            'status'      => $this->status,
+            'birthday'    => $this->birthday,
+            'login'       => $this->login,
         ];
     }
 }
