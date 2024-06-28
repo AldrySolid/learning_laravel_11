@@ -14,7 +14,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'author'       => 'required|integer', // TODO Это ссылка на сущность
+            'profile_id'   => 'required|integer', // TODO Это ссылка на сущность
             'parent_class' => 'required|string',  // TODO Это класс сущности
             'parent_id'    => 'required|integer', // TODO Это идентификатор сущности
             'content'      => 'required|string',

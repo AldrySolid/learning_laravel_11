@@ -18,7 +18,7 @@ class CommentResource extends JsonResource
             'id'           => $this->id,
             'parent_class' => $this->parent_class,
             'parent_id'    => $this->parent_id,
-            'author'       => $this->author,
+            'profile_id'   => $this->profile_id,
             'content'      => $this->content,
             'count_likes'  => $this->count_likes,
             'status'       => $this->status,

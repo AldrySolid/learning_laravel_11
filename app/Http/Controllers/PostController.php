@@ -26,7 +26,7 @@ class PostController extends Controller
         $data = [
             'title'          => fake()->jobTitle(),
             'content'        => fake()->realText(255),
-            'author'         => User::inRandomOrder()->get()->first()->id,
+            'profile_id'     => User::inRandomOrder()->get()->first()->id,
             'is_commentable' => 1,
         ];
 

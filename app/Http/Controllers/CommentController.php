@@ -25,7 +25,7 @@ class CommentController extends Controller
     public function store()
     {
         $data = [
-            'author'         => User::inRandomOrder()->get()->first()->id,
+            'profile_id'     => User::inRandomOrder()->get()->first()->id,
             'parent_class'   => Post::class,
             'parent_id'      => Post::inRandomOrder()->get()->first()->id,
             'title'          => fake()->jobTitle(),

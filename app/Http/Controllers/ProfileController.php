@@ -32,7 +32,7 @@ class ProfileController extends Controller
     public function store()
     {
         $data = [
-            'author'      => User::inRandomOrder()->get()->first()->id,
+            'user_id'     => User::inRandomOrder()->get()->first()->id,
             'first_name'  => fake()->firstName(),
             'second_name' => fake()->lastName(),
             'third_name'  => fake()->name(),
