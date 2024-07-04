@@ -13,6 +13,9 @@ class Comment extends Model
 {
     use HasFactory;
 
+    const STATUS_MODERATE  = 1;
+    const STATUS_PUBLISHED = 2;
+
     protected $fillable = [
         'parent_class',
         'parent_id',

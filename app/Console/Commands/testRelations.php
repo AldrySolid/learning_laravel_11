@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Profile;
 use App\Models\Tag;
 use Illuminate\Console\Command;
 
@@ -19,9 +20,14 @@ class testRelations extends Command
      */
     public function handle()
     {
-        $post     = Post::inRandomOrder()->get()->first();
+        /** @var Post $post */
+        $post = Post::inRandomOrder()->get()->first();
+        /** @var Category $category */
         $category = Category::inRandomOrder()->get()->first();
-        $tag      = Tag::inRandomOrder()->get()->first();
+        /** @var Tag $tag */
+        $tag = Tag::inRandomOrder()->get()->first();
+        /** @var Profile $profile */
+        $profile = Profile::inRandomOrder()->get()->first();
 
         $result = null;
 
@@ -45,6 +51,14 @@ class testRelations extends Command
             case 5:
                 // Пост -> Категория -> Заголовок
                 $result = $post->category->title;
+                break;
+            case 6:
+                // Категория -> Профили
+                $result = $category->profiles;
+                break;
+            case 7:
+                // Профиль -> Категории
+                $result = $profile->categories;
                 break;
             default:
                 $this->fail();

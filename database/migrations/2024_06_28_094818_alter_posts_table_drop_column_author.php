@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->unsignedBigInteger('author');
+            $table->unsignedBigInteger('author')->default(1);
         });
     }
 };
