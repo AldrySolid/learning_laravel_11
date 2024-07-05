@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Profile;
 use App\Models\Tag;
@@ -28,6 +29,8 @@ class testRelations extends Command
         $tag = Tag::inRandomOrder()->get()->first();
         /** @var Profile $profile */
         $profile = Profile::inRandomOrder()->get()->first();
+        /** @var Comment $comment */
+        $comment = Comment::inRandomOrder()->get()->first();
 
         $result = null;
 
@@ -59,6 +62,21 @@ class testRelations extends Command
             case 7:
                 // Профиль -> Категории
                 $result = $profile->categories;
+                break;
+            // =================================
+            // Полиморфные связи
+            // =================================
+            case 8:
+                // Профиль -> Комментарии
+                $result = $profile->comments;
+                break;
+            case 9:
+                // Пост -> Комментарии
+                $result = $post->comments;
+                break;
+            case 10:
+                // Комментарий -> Родительская сущность
+                $result = $comment->commentable;
                 break;
             default:
                 $this->fail();

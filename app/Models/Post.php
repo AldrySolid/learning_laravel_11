@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @mixin IdeHelperPost
@@ -37,8 +38,13 @@ class Post extends Model
         return $this->BelongsToMany(Tag::class)->withTimestamps();
     }
 
-    public function comments(): BelongsTo
+    public function comments(): MorphMany
     {
-        // TODO
+        return $this->morphMany(
+            Comment::class,
+            'commentable',
+            'parent_class',
+            'parent_id'
+        );
     }
 }

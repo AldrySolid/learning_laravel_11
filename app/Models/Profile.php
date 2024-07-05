@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @mixin IdeHelperProfile
@@ -41,6 +42,16 @@ class Profile extends Model
             'id',
             'id',
             'category_id'
+        );
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(
+            Comment::class,
+            'commentable',
+            'parent_class',
+            'parent_id'
         );
     }
 }
