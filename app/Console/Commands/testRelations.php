@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Article;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
@@ -31,6 +32,8 @@ class testRelations extends Command
         $profile = Profile::inRandomOrder()->get()->first();
         /** @var Comment $comment */
         $comment = Comment::inRandomOrder()->get()->first();
+        /** @var Article $article */
+        $article = Article::inRandomOrder()->get()->first();
 
         $result = null;
 
@@ -77,6 +80,51 @@ class testRelations extends Command
             case 10:
                 // Комментарий -> Родительская сущность
                 $result = $comment->commentable;
+                break;
+            // =================================
+            // Добавление сущности по связи
+            // =================================
+            case 11:
+                // Пост -> Теги
+                echo '============' . PHP_EOL;
+                echo 'POST_ID = ' . $post->id . PHP_EOL;
+                echo '- count tags = ' . $post->tags->count() . PHP_EOL;
+                echo '- tags ids = ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->syncWithoutDetaching([10]);
+
+                $post->refresh();
+                echo '- - tag syncWithoutDetaching 10' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->sync([10]);
+                $post->refresh();
+                echo '- - tag sync 10' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->attach([1,4,5,7]);
+                $post->refresh();
+                echo '- - tag attach 1,4,5,7' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->detach([5,7]);
+                $post->refresh();
+                echo '- - tag detach 5 and 7' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->toggle([4]);
+                $post->refresh();
+                echo '- - tag toggle 4' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                $post->tags()->toggle([4]);
+                $post->refresh();
+                echo '- - tag toggle 4' . PHP_EOL;
+                echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
+
+                echo '============' . PHP_EOL;
+
+                $result = $post->id;
                 break;
             default:
                 $this->fail();

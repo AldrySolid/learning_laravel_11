@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Profile;
+use App\Models\Article;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,10 +20,14 @@ class CommentFactory extends Factory
      */
     public function definition(): array
     {
+        $parentClasses = [
+            Post::class,
+            Profile::class,
+            Article::class
+        ];
+
         /** @var Model $parentClass */
-        $parentClass = random_int(1, 100) > 50
-            ? Post::class
-            : Profile::class;
+        $parentClass = $parentClasses[random_int(0, count($parentClasses) - 1)];
 
         return [
             'parent_class' => $parentClass,

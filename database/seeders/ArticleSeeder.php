@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Comment;
+use App\Models\Article;
 use Illuminate\Database\Seeder;
 
-class CommentSeeder extends Seeder
+class ArticleSeeder extends Seeder
 {
     public function run(): void
     {
-        Comment::factory(30)->create();
+        Article::factory(20)->create();
     }
 }
