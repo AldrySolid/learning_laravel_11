@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\LogService;
+use App\Traits\HasLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,12 +16,28 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Article extends Model
 {
     use HasFactory;
+    use HasLog {
+        HasLog::booted as private trait_booted;
+    }
 
     protected $fillable = [
         'title',
         'content',
         'profile_id',
     ];
+
+    protected static function booted()
+    {
+        self::trait_booted();
+
+        static::getEventDispatcher()->forget(
+            "eloquent.created: " . static::class
+        );
+
+        static::created(function (Article $article) {
+            LogService::addLog($article, 'created123');
+        });
+    }
 
     public function profile(): BelongsTo
     {

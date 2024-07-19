@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\HasLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @mixin IdeHelperRole
- */
-class Role extends Model
+class Log extends Model
 {
     use HasFactory;
-    use HasLog;
 
     protected $fillable = [
-        'title',
+        'profile_id',
+        'parent_class',
+        'parent_id',
+        'event',
+        'before',
+        'after',
     ];
 }

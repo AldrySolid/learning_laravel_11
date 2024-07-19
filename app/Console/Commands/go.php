@@ -6,15 +6,19 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\PostChild;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\Tag;
+
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
-class testRelations extends Command
+class go extends Command
 {
-    protected $signature = 'testRelations {case}';
+    protected $signature = 'go {case}';
 
-    protected $description = 'Test relations';
+    protected $description = 'Test command';
 
     /**
      * Execute the console command.
@@ -102,12 +106,12 @@ class testRelations extends Command
                 echo '- - tag sync 10' . PHP_EOL;
                 echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
 
-                $post->tags()->attach([1,4,5,7]);
+                $post->tags()->attach([1, 4, 5, 7]);
                 $post->refresh();
                 echo '- - tag attach 1,4,5,7' . PHP_EOL;
                 echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
 
-                $post->tags()->detach([5,7]);
+                $post->tags()->detach([5, 7]);
                 $post->refresh();
                 echo '- - tag detach 5 and 7' . PHP_EOL;
                 echo '- - tags ids result ' . $post->tags->pluck('id') . PHP_EOL;
@@ -126,10 +130,67 @@ class testRelations extends Command
 
                 $result = $post->id;
                 break;
+            // =================================
+            // Тестирование логирования через Обозреватель
+            // =================================
+            case 12:
+                /** @var Post $post */
+                $post = Post::factory(1)->make()->first();
+                $post = Post::create($post->attributesToArray());
+                $post->refresh();
+
+                $post->title = 'UPDATED ' . $post->title;
+                $post->count_views++;
+                $post->save();
+
+                $post->delete();
+
+                /** @var PostChild $post */
+                $postChild = PostChild::factory(1)->make()->first();
+                $postChild = PostChild::create($postChild->attributesToArray());
+                $postChild->refresh();
+
+                $postChild->title = 'UPDATED ' . $post->title;
+                $postChild->count_views++;
+                $postChild->save();
+
+                $postChild->delete();
+
+                break;
+            // =================================
+            // Тестирование логирования через Трейт
+            // =================================
+            case 13:
+                /** @var Role $role */
+                $role = Role::factory(1)->make()->first();
+                $role = Role::create($role->attributesToArray());
+                $role->refresh();
+
+                $role->title = 'UPDATED ' . $role->title;
+                $role->save();
+
+                $role->delete();
+
+                break;
+            // =================================
+            // Тестирование переопределения  через Трейт
+            // =================================
+            case 14:
+                /** @var Article $article */
+                $article = Article::factory(1)->make()->first();
+                $article = Article::create($article->attributesToArray());
+                $article->refresh();
+
+                $article->title = 'UPDATED ' . $article->title;
+                $article->save();
+
+                $article->delete();
+
+                break;
             default:
                 $this->fail();
         }
 
-        dd($result);
+        //dd($result);
     }
 }
