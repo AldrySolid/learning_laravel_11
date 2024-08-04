@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasLog;
+use App\Traits\Models\HasLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

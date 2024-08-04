@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Models;
 
 use App\Services\LogService;
 use Illuminate\Database\Eloquent\Model;

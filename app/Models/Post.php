@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Observers\PostObserver;
+use App\Traits\Models\HasFilter;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Post extends Model
 {
     use HasFactory;
+    use HasFilter;
 
     protected $fillable = [
         'title',
