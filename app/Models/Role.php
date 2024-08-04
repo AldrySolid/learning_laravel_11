@@ -14,6 +14,8 @@ class Role extends Model
     use HasFactory;
     use HasLog;
 
+    const ADMIN = 1;
+
     protected $fillable = [
         'title',
     ];
