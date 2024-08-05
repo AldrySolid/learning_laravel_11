@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\LogService;
+use App\Services\LogToDbService;
 use App\Traits\Models\HasLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +35,7 @@ class Article extends Model
         );
 
         static::created(function (Article $article) {
-            LogService::addLog($article, 'created123');
+            LogToDbService::addLog($article, 'created123');
         });
     }
 

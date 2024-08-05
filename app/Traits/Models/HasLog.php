@@ -2,7 +2,8 @@
 
 namespace App\Traits\Models;
 
-use App\Services\LogService;
+use App\Services\LogToDbService;
+use App\Services\LogToFileService;
 use Illuminate\Database\Eloquent\Model;
 
 trait HasLog
@@ -10,20 +11,24 @@ trait HasLog
     protected static function booted()
     {
         static::created(function (Model $model) {
-            LogService::addLog($model, 'created');
+            LogToDbService::addLog($model, 'created');
+            LogToFileService::addLog($model, 'created');
         });
 
         static::updated(function (Model $model) {
-            LogService::addLog($model, 'updated');
+            LogToDbService::addLog($model, 'updated');
+            LogToFileService::addLog($model, 'updated');
         });
 
         static::deleted(function (Model $model) {
-            LogService::addLog($model, 'deleted');
+            LogToDbService::addLog($model, 'deleted');
+            LogToFileService::addLog($model, 'deleted');
         });
 
         static::retrieved(function (Model $model) {
             // Отключен, так как генерирует кучу логов
-            // LogService::addLog($model, 'retrieved');
+            // LogToDbService::addLog($model, 'retrieved');
+            // LogToFileService::addLog($model, 'retrieved');
         });
 
         parent::booted();

@@ -11,8 +11,8 @@ use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Tag;
 
+use App\Services\PostService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 
 class go extends Command
 {
@@ -187,10 +187,26 @@ class go extends Command
                 $article->delete();
 
                 break;
+            // =================================
+            // Логируем факт создания поста при поиске по title
+            // =================================
+            case 15:
+                $title = 'random_title_' . fake()->title;
+                PostService::firstOrCreate($title);
+
+
+                break;
+            // =================================
+            // Логируем факт создания поста при обновлении по title
+            // =================================
+            case 16:
+                $title = 'random_title_' . fake()->title;
+                PostService::updateOrCreate($title);
+
+                break;
             default:
                 $this->fail();
         }
-
         //dd($result);
     }
 }

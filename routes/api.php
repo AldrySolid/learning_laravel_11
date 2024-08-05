@@ -34,5 +34,9 @@ Route::apiResources(
     ]
 );
 
-Route::apiResource('posts', PostController::class)
-     ->middleware(['jwt.auth', IsAdminMiddleware::class]);
+// API Постов публичное
+Route::apiResource('posts', PostController::class);
+
+// API Постов закрыто jwt
+//Route::apiResource('posts', PostController::class)
+//     ->middleware(['jwt.auth', IsAdminMiddleware::class]);
