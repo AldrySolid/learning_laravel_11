@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
@@ -7,10 +8,27 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::controller(CategoryController::class)->group(
@@ -35,11 +53,23 @@ Route::controller(CommentController::class)->group(
 
 Route::controller(PostController::class)->group(
     function () {
-        Route::get('/posts/store', 'store');
-        Route::get('/posts/index', 'index');
+        Route::post('/posts/store', 'store')->name('posts.store');
+        Route::get('/posts/index', 'index')->name('posts.index');
+        Route::get('/posts/create', 'create')->name('posts.create');
         Route::get('/posts/show/{post}', 'show');
         Route::get('/posts/update/{post}', 'update');
         Route::get('/posts/destroy/{post}', 'destroy');
+    }
+);
+
+Route::controller(ArticleController::class)->group(
+    function () {
+        Route::post('/articles/store', 'store')->name('articles.store');
+        Route::get('/articles/index', 'index')->name('articles.index');
+        Route::get('/articles/create', 'create')->name('articles.create');
+        Route::get('/articles/show/{post}', 'show');
+        Route::get('/articles/update/{post}', 'update');
+        Route::get('/articles/destroy/{post}', 'destroy');
     }
 );
 
@@ -82,3 +112,5 @@ Route::controller(UserController::class)->group(
         Route::get('/users/destroy/{user}', 'destroy');
     }
 );
+
+require __DIR__.'/auth.php';

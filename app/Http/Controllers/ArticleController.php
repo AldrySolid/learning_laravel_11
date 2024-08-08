@@ -2,38 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
-use App\Models\User;
+use App\Http\Requests\Article\ArticleRequest;
+use App\Http\Resources\ArticleResource;
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PostController extends Controller
+class ArticleController extends Controller
 {
     public function index()
     {
-        $posts = PostResource::collection(Post::all())->resolve();
+        $articles = ArticleResource::collection(Article::all())->resolve();
 
-        return inertia('Post/Index', compact('posts'));
+        return inertia('Article/Index', compact('articles'));
     }
 
-    public function store(PostRequest $request)
+    public function store(ArticleRequest $request)
     {
         $data = $request->validated();
         $data['profile_id'] = 1;
         $data['category_id'] = 1;
-        $post = Post::create($data);
+        $post = Article::create($data);
 
         return $post;
     }
 
-    public function show(Post $post)
+    public function show(Article $post)
     {
-        return PostResource::make($post)->resolve();
+        return ArticleResource::make($post)->resolve();
     }
 
-    public function destroy(Post $post)
+    public function destroy(Article $post)
     {
         $post->delete();
 
@@ -42,7 +41,7 @@ class PostController extends Controller
 
     public function create()
     {
-        return inertia('Post/Create');
+        return inertia('Article/Create');
     }
 
     public function edit(string $id)
