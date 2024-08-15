@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin IdeHelperPost
@@ -51,5 +52,20 @@ class Post extends Model
             'parent_class',
             'parent_id'
         );
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        $this->tags()->sync($attributes['tags']);
+
+        return parent::update($attributes, $options);
+    }
+
+    public function delete()
+    {
+        DB::transaction(function() {
+            $this->tags()->sync([]);
+            parent::delete();
+        });
     }
 }

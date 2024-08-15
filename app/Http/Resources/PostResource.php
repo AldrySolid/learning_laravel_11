@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,6 +15,9 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var Collection $tags */
+        $tags = $this->tags;
+
         return [
             'id'             => $this->id,
             'title'          => $this->title,
@@ -21,6 +25,7 @@ class PostResource extends JsonResource
             'profile_id'     => $this->profile_id,
             'count_views'    => $this->count_views,
             'is_commentable' => $this->is_commentable,
+            'tags'           => $tags->pluck('id')->toArray(),
         ];
     }
 }

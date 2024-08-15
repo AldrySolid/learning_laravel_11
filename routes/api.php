@@ -17,7 +17,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('auth/login', [AuthController::class, 'login']);
-Route::group(['middleware' => 'jwt.auth', 'prefix' => 'auth'], function () {
+Route::group(['middleware' => 'web', 'prefix' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);

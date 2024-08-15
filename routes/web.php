@@ -57,8 +57,9 @@ Route::controller(PostController::class)->group(
         Route::get('/posts/index', 'index')->name('posts.index');
         Route::get('/posts/create', 'create')->name('posts.create');
         Route::get('/posts/show/{post}', 'show');
-        Route::get('/posts/update/{post}', 'update');
-        Route::get('/posts/destroy/{post}', 'destroy');
+        Route::get('/posts/edit/{post}', 'edit')->name('posts.edit');
+        Route::post('/posts/update/{post}', 'update')->name('posts.update');
+        Route::delete('/posts/destroy/{post}', 'destroy')->name('posts.destroy');
     }
 );
 

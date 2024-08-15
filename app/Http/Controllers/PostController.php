@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Post\PostRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Tag;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = PostResource::collection(Post::all())->resolve();
+        $posts = PostResource::collection(Post::all()->sortDesc())->resolve();
 
         return inertia('Post/Index', compact('posts'));
     }
 
-    public function store(PostRequest $request)
+    public function store(StoreRequest $request)
     {
-        $data = $request->validated();
-        $data['profile_id'] = 1;
+        $data                = $request->validated();
+        $data['profile_id']  = 1;
         $data['category_id'] = 1;
-        $post = Post::create($data);
 
-        return $post;
+        Post::create($data);
+
+        return redirect(route('posts.index', absolute: false));
     }
 
     public function show(Post $post)
@@ -37,7 +38,11 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return Response::HTTP_NO_CONTENT;
+        return response()->json(
+            [
+                'message' => 'Post deleted'
+            ]
+        );
     }
 
     public function create()
@@ -45,13 +50,19 @@ class PostController extends Controller
         return inertia('Post/Create');
     }
 
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        $post = PostResource::make($post)->resolve();
+        $tags = Tag::All()->pluck('title', 'id')->toArray();
+
+        return inertia('Post/Edit', compact(['post', 'tags']));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, Post $post)
     {
-        //
+        $data = $request->validated();
+        $post->update($data);
+
+        return redirect(route('posts.index', absolute: false));
     }
 }
