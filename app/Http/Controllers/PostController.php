@@ -7,6 +7,7 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\PostService;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
@@ -24,7 +25,8 @@ class PostController extends Controller
         $data['profile_id']  = 1;
         $data['category_id'] = 1;
 
-        Post::create($data);
+        $post = Post::create($data);
+        $post->tags()->sync($data['tags']);
 
         return redirect(route('posts.index', absolute: false));
     }
@@ -47,7 +49,9 @@ class PostController extends Controller
 
     public function create()
     {
-        return inertia('Post/Create');
+        $tags = Tag::All()->pluck('title', 'id')->toArray();
+
+        return inertia('Post/Create', compact(['tags']));
     }
 
     public function edit(Post $post)
@@ -60,8 +64,8 @@ class PostController extends Controller
 
     public function update(UpdateRequest $request, Post $post)
     {
-        $data = $request->validated();
-        $post->update($data);
+        $data = $request->validationData();
+        PostService::update($post, $data);
 
         return redirect(route('posts.index', absolute: false));
     }

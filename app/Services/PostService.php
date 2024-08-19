@@ -14,6 +14,13 @@ abstract class PostService
         return self::check('firstOrCreate', $title);
     }
 
+    public static function update(Post $post, array $data): Post
+    {
+        $post->update($data);
+
+        return $post;
+    }
+
     public static function updateOrCreate(string $title): Post
     {
         return self::check('updateOrCreate', $title);

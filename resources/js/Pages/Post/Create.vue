@@ -19,6 +19,20 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     <input v-model="post.content" type="text" placeholder="content"/>
                 </div>
                 <div class="mb-4">
+                    <Multiselect
+                        v-model="post.tags"
+                        mode="tags"
+                        placeholder="Select your characters"
+                        label="title"
+                        :options="tags"
+                        :search="true"
+                        :searchable="true"
+                        :createTag="true"
+                    >
+                        <template v-slot:option="{ option }">{{ option.title }}</template>
+                    </Multiselect>
+                </div>
+                <div class="mb-4">
                     <Link @click="storePost" href="#" class="inline-block px-3 py-2 bg-green-600 text-white">Add</Link>
                 </div>
             </div>
@@ -27,8 +41,18 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 </template>
 
 <script>
+import Multiselect from '@vueform/multiselect'
+
 export default {
     name: "Create",
+
+    components: {
+        Multiselect,
+    },
+
+    props: {
+        tags: Array,
+    },
 
     data() {
         return {
@@ -49,3 +73,4 @@ export default {
     }
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>

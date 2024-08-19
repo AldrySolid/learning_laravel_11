@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @mixin IdeHelperPost
@@ -27,6 +28,7 @@ class Post extends Model
         'profile_id',
         'category_id',
         'is_commentable',
+        'image_path',
     ];
 
     public function profile(): BelongsTo
@@ -56,14 +58,33 @@ class Post extends Model
 
     public function update(array $attributes = [], array $options = [])
     {
-        $this->tags()->sync($attributes['tags']);
+        DB::transaction(function () use ($attributes, $options) {
+            // Удаляем старое изображение
+            {
+                $before = $this->getOriginal();
+                $after  = $this->getDirty();
 
-        return parent::update($attributes, $options);
+                $beforeImagePath = $before['image_path'] ?? '';
+                $afterImagePath  = $after['image_path'] ?? '';
+
+                if ($beforeImagePath != $afterImagePath) {
+                    Storage::disk('public')->delete($before['image_path']);
+                }
+            }
+
+            $this->tags()->sync($attributes['tags']);
+
+            return parent::update($attributes, $options);
+        });
     }
 
     public function delete()
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
+            if (isset($post->image_path)) {
+                Storage::disk('public')->delete($post->image_path);
+            }
+
             $this->tags()->sync([]);
             parent::delete();
         });

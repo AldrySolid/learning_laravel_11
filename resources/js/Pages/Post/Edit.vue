@@ -32,6 +32,12 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                         <template v-slot:option="{ option }">{{ option.title }}</template>
                     </Multiselect>
                 </div>
+                <div v-if="post.image_path" class="mb-4">
+                    <img :src="post.image_path" width="320px" />
+                </div>
+                <div class="mb-4">
+                    <input @change="setImage" type="file" accept=".jpg,.jpeg"/>
+                </div>
                 <div class="mb-4">
                     <Link @click="updatePost" href="#" class="inline-block px-3 py-2 bg-blue-600 text-white">Edit</Link>
                 </div>
@@ -56,20 +62,25 @@ export default {
     },
 
     data() {
-        return {
-            tags: this.tags
-        }
+        return {}
     },
 
     methods: {
         updatePost() {
-            axios.post('/posts/update/' + this.post.id, this.post)
+            axios.post('/posts/update/' + this.post.id, this.post, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     this.getPosts();
                 })
         },
         getPosts() {
             window.location.href = '/posts/index';
+        },
+        setImage(event) {
+            this.post.image = event.target.files[0];
         },
     }
 }
