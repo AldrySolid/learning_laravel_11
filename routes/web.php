@@ -114,4 +114,5 @@ Route::controller(UserController::class)->group(
     }
 );
 
+require __DIR__.'/my.php';
 require __DIR__.'/auth.php';

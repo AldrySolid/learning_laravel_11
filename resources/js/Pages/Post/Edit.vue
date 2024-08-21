@@ -20,11 +20,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 </div>
                 <div class="mb-4">
                     <Multiselect
-                        v-model="post.tags"
+                        v-model="post.tagsTitles"
                         mode="tags"
                         placeholder="Select your characters"
                         label="title"
-                        :options="tags"
+                        :options="tagsTitles"
                         :search="true"
                         :searchable="true"
                         :createTag="true"
@@ -36,7 +36,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     <img :src="post.image_path" width="320px" />
                 </div>
                 <div class="mb-4">
-                    <input @change="setImage" type="file" accept=".jpg,.jpeg"/>
+                    <input @change="setImage" ref="input_image" type="file" accept=".jpg,.jpeg"/>
                 </div>
                 <div class="mb-4">
                     <Link @click="updatePost" href="#" class="inline-block px-3 py-2 bg-blue-600 text-white">Edit</Link>
@@ -58,7 +58,7 @@ export default {
 
     props: {
         post: Object,
-        tags: Array,
+        tagsTitles: Array,
     },
 
     data() {
@@ -77,6 +77,7 @@ export default {
                 })
         },
         getPosts() {
+            this.$refs.input_image.value = null;
             window.location.href = '/posts/index';
         },
         setImage(event) {

@@ -3,11 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 </script>
 
 <template>
-    <Head title="Post Create"/>
+    <Head title="My post Create"/>
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Post create</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">My post create</h2>
         </template>
 
         <div class="w-1/2 mx-auto">
@@ -63,19 +63,19 @@ export default {
 
     methods: {
         storePost() {
-            axios.post('/posts/store', this.post, {
+            axios.post('/my/posts/store', this.post, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
                 .then(response => {
-                    this.getPosts();
+                    this.getMyPosts();
                 })
         },
-    },
-    getPosts() {
-        window.location.href = '/posts/index';
-    },
+        getMyPosts() {
+            window.location.href = '/my/posts/index';
+        }
+    }
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

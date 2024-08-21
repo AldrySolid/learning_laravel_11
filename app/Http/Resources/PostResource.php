@@ -26,7 +26,7 @@ class PostResource extends JsonResource
             'profile_id'     => $this->profile_id,
             'count_views'    => $this->count_views,
             'is_commentable' => $this->is_commentable,
-            'tags'           => $tags->pluck('id')->toArray(),
+            'tagsTitles'     => $tags->pluck('title', 'id')->toArray(),
             'image_path'     => isset($this->image_path)
                 ? Storage::disk('public')->url($this->image_path)
                 : null,

@@ -56,28 +56,6 @@ class Post extends Model
         );
     }
 
-    public function update(array $attributes = [], array $options = [])
-    {
-        DB::transaction(function () use ($attributes, $options) {
-            // Удаляем старое изображение
-            {
-                $before = $this->getOriginal();
-                $after  = $this->getDirty();
-
-                $beforeImagePath = $before['image_path'] ?? '';
-                $afterImagePath  = $after['image_path'] ?? '';
-
-                if ($beforeImagePath != $afterImagePath) {
-                    Storage::disk('public')->delete($before['image_path']);
-                }
-            }
-
-            $this->tags()->sync($attributes['tags']);
-
-            return parent::update($attributes, $options);
-        });
-    }
-
     public function delete()
     {
         DB::transaction(function () {

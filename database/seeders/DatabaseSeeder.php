@@ -15,39 +15,47 @@ class DatabaseSeeder extends Seeder
         $this->createAdmin();
 
         $this->call([
-           ProfileSeeder::class,
-           TagSeeder::class,
-           RoleSeeder::class,
-           CategorySeeder::class,
-           PostSeeder::class,
-           ArticleSeeder::class,
-           CommentSeeder::class,
-           PostTagSeeder::class,
+            ProfileSeeder::class,
+            TagSeeder::class,
+            RoleSeeder::class,
+            CategorySeeder::class,
+            PostSeeder::class,
+            ArticleSeeder::class,
+            CommentSeeder::class,
+            PostTagSeeder::class,
         ]);
     }
 
-    protected function createAdmin() {
-        $adminUser = User::create(
-            [
-                'name'     => 'admin',
-                'email'    => 'admin@example.com',
-                'password' => Hash::make('123'),
-            ]
-        );
+    protected function createAdmin()
+    {
+        $adminUsers = [
+            'admin'  => 'admin@example.com',
+            'admin2' => 'admin2@example.com',
+        ];
 
-        Profile::create(
-            [
-                'first_name'  => 'admin_first_name',
-                'second_name' => 'admin_second_name',
-                'third_name'  => 'admin_third_name',
-                'status'      => Profile::STATUS_ACTIVE,
-                'user_id'     => $adminUser->id,
-            ]
-        );
+        foreach ($adminUsers as $adminUserLogin => $adminUserEmail) {
+            $adminUser = User::create(
+                [
+                    'name'     => $adminUserLogin,
+                    'email'    => $adminUserEmail,
+                    'password' => Hash::make('123'),
+                ]
+            );
 
-        $adminRole = Role::create(['title' => 'Admin']);
+            Profile::create(
+                [
+                    'first_name'  => 'admin_first_name',
+                    'second_name' => 'admin_second_name',
+                    'third_name'  => 'admin_third_name',
+                    'status'      => Profile::STATUS_ACTIVE,
+                    'user_id'     => $adminUser->id,
+                ]
+            );
 
-        /** @var User $adminUser */
-        $adminUser->roles()->sync($adminRole->id);
+            $adminRole = Role::firstOrCreate(['title' => 'Admin']);
+
+            /** @var User $adminUser */
+            $adminUser->roles()->sync($adminRole->id);
+        }
     }
 }

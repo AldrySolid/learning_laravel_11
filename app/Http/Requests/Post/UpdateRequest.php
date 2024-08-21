@@ -10,10 +10,10 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'   => 'required|string',
-            'content' => 'required|string',
-            'tags'    => 'required|array',
-            'image'   => 'nullable|file',
+            'title'      => 'required|string',
+            'content'    => 'required|string',
+            'tagsTitles' => 'required|array',
+            'image'      => 'nullable|file',
         ];
     }
 

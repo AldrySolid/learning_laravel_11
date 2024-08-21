@@ -3,11 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 </script>
 
 <template>
-    <Head title="Post Create"/>
+    <Head title="Post Edit"/>
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Post create</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Post Edit</h2>
         </template>
 
         <div class="w-1/2 mx-auto">
@@ -22,7 +22,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     <Multiselect
                         v-model="post.tagsTitles"
                         mode="tags"
-                        placeholder="Select tags"
+                        placeholder="Select your characters"
                         label="title"
                         :options="tagsTitles"
                         :search="true"
@@ -32,8 +32,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                         <template v-slot:option="{ option }">{{ option.title }}</template>
                     </Multiselect>
                 </div>
+                <div v-if="post.image_path" class="mb-4">
+                    <img :src="post.image_path" width="320px" />
+                </div>
                 <div class="mb-4">
-                    <Link @click="storePost" href="#" class="inline-block px-3 py-2 bg-green-600 text-white">Add</Link>
+                    <input @change="setImage" ref="input_image" type="file" accept=".jpg,.jpeg"/>
+                </div>
+                <div class="mb-4">
+                    <Link @click="updatePost" href="#" class="inline-block px-3 py-2 bg-blue-600 text-white">Edit</Link>
                 </div>
             </div>
         </div>
@@ -44,7 +50,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Multiselect from '@vueform/multiselect'
 
 export default {
-    name: "Create",
+    name: "Edit",
 
     components: {
         Multiselect,
@@ -56,26 +62,28 @@ export default {
     },
 
     data() {
-        return {
-            post: {}
-        }
+        return {}
     },
 
     methods: {
-        storePost() {
-            axios.post('/posts/store', this.post, {
+        updatePost() {
+            axios.post('/posts/update/' + this.post.id, this.post, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
                 .then(response => {
-                    this.getPosts();
+                    this.getMyPosts();
                 })
         },
-    },
-    getPosts() {
-        window.location.href = '/posts/index';
-    },
+        getMyPosts() {
+            this.$refs.input_image.value = null;
+            window.location.href = '/my/posts/index';
+        },
+        setImage(event) {
+            this.post.image = event.target.files[0];
+        },
+    }
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

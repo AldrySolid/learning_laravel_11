@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\My;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Services\PostService;
-use Symfony\Component\HttpFoundation\Response;
+use App\Services\ProfileService;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = PostResource::collection(Post::all()->sortDesc())->resolve();
+        $posts = ProfileService::getMyPosts();
 
-        return inertia('Post/Index', compact('posts'));
+        return inertia('My/Post/Index', compact('posts'));
     }
 
     public function store(StoreRequest $request)
@@ -25,7 +26,7 @@ class PostController extends Controller
 
         PostService::store($data);
 
-        return redirect(route('posts.index', absolute: false));
+        return redirect(route('my.posts.index', absolute: false));
     }
 
     public function show(Post $post)
@@ -39,7 +40,7 @@ class PostController extends Controller
 
         return response()->json(
             [
-                'message' => 'Post deleted'
+                'message' => 'My post deleted'
             ]
         );
     }
@@ -48,7 +49,7 @@ class PostController extends Controller
     {
         $tagsTitles = Tag::All()->pluck('title')->toArray();
 
-        return inertia('Post/Create', compact(['tagsTitles']));
+        return inertia('My/Post/Create', compact(['tagsTitles']));
     }
 
     public function edit(Post $post)
@@ -56,7 +57,7 @@ class PostController extends Controller
         $post       = PostResource::make($post)->resolve();
         $tagsTitles = Tag::All()->pluck('title')->toArray();
 
-        return inertia('Post/Edit', compact(['post', 'tagsTitles']));
+        return inertia('My/Post/Edit', compact(['post', 'tagsTitles']));
     }
 
     public function update(UpdateRequest $request, Post $post)
@@ -64,6 +65,6 @@ class PostController extends Controller
         $data = $request->validationData();
         PostService::update($post, $data);
 
-        return redirect(route('posts.index', absolute: false));
+        return redirect(route('my.posts.index', absolute: false));
     }
 }
