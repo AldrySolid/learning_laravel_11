@@ -3,14 +3,35 @@
 namespace App\Services;
 
 use App\Exceptions\PostException;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Profile;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 abstract class PostService
 {
+    const CACHE_KEY__POST_INDEX = 'posts.index';
+
+    public static function index(array $data): AnonymousResourceCollection
+    {
+        $cacheKey = md5(serialize($data));
+
+        return Cache::tags([self::CACHE_KEY__POST_INDEX])->remember(
+            $cacheKey,
+            now()->addHour(),
+            function () use ($data) {
+                return PostResource::collection(
+                    Post::filter($data)->with('tags')->orderBy('id', 'desc')
+                        ->paginate(3, ['*'], 'page', $data['page'])
+                );
+            }
+        );
+    }
+
     public static function firstOrCreate(string $title): Post
     {
         return self::check('firstOrCreate', $title);
@@ -32,6 +53,8 @@ abstract class PostService
             $post->tags()->attach($tagIds);
 
             DB::commit();
+
+            Cache::tags([self::CACHE_KEY__POST_INDEX])->flush();
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -46,7 +69,7 @@ abstract class PostService
         try {
             DB::beginTransaction();
 
-            // Удаляем старое изображение
+            #region // Удаляем старое изображение
             {
                 $before = $post->getOriginal();
                 $after  = $post->getDirty();
@@ -58,12 +81,15 @@ abstract class PostService
                     Storage::disk('public')->delete($before['image_path']);
                 }
             }
+            #endregion
 
             $tagIds = TagService::storeBatch($data['tagsTitles']);
             $post->update($data);
             $post->tags()->sync($tagIds);
 
             DB::commit();
+
+            Cache::tags([self::CACHE_KEY__POST_INDEX])->flush();
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -76,6 +102,28 @@ abstract class PostService
     public static function updateOrCreate(string $title): Post
     {
         return self::check('updateOrCreate', $title);
+    }
+
+    public static function delete(Post $post): void
+    {
+        try {
+            DB::beginTransaction();
+
+            if (isset($post->image_path)) {
+                Storage::disk('public')->delete($post->image_path);
+            }
+
+            $post->tags()->sync([]);
+            $post->delete();
+
+            DB::commit();
+
+            Cache::tags([self::CACHE_KEY__POST_INDEX])->flush();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 
     /**

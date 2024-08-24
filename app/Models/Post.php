@@ -55,16 +55,4 @@ class Post extends Model
             'parent_id'
         );
     }
-
-    public function delete()
-    {
-        DB::transaction(function () {
-            if (isset($post->image_path)) {
-                Storage::disk('public')->delete($post->image_path);
-            }
-
-            $this->tags()->sync([]);
-            parent::delete();
-        });
-    }
 }

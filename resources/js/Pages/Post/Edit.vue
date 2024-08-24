@@ -73,11 +73,10 @@ export default {
                 }
             })
                 .then(response => {
-                    this.getPosts();
+                    this.redirectToPostsIndex();
                 })
         },
-        getPosts() {
-            this.$refs.input_image.value = null;
+        redirectToPostsIndex() {
             window.location.href = '/posts/index';
         },
         setImage(event) {

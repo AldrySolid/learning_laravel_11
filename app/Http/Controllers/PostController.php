@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\IndexRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\ProfileResource;
 use App\Models\Post;
+use App\Models\Profile;
 use App\Models\Tag;
 use App\Services\PostService;
-use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(IndexRequest $request)
     {
-        $posts = PostResource::collection(Post::all()->sortDesc())->resolve();
+        $data = $request->validationData();
 
-        return inertia('Post/Index', compact('posts'));
+        $posts    = PostService::index($data);
+        $profiles = ProfileResource::collection(Profile::all())->resolve();
+
+        return $request->wantsJson()
+            ? $posts
+            : inertia('Post/Index', compact('posts', 'profiles'));
     }
 
     public function store(StoreRequest $request)
@@ -35,7 +42,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $post->delete();
+        PostService::delete($post);
 
         return response()->json(
             [

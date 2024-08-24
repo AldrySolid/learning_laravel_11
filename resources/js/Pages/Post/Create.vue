@@ -69,13 +69,13 @@ export default {
                 }
             })
                 .then(response => {
-                    this.getPosts();
+                    this.redirectToPostsIndex();
                 })
         },
-    },
-    getPosts() {
-        window.location.href = '/posts/index';
-    },
+        redirectToPostsIndex() {
+            window.location.href = '/posts/index';
+        },
+    }
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

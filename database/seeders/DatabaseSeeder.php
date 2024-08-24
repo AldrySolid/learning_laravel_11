@@ -44,9 +44,9 @@ class DatabaseSeeder extends Seeder
 
             Profile::create(
                 [
-                    'first_name'  => 'admin_first_name',
-                    'second_name' => 'admin_second_name',
-                    'third_name'  => 'admin_third_name',
+                    'first_name'  => $adminUserLogin . '_first_name',
+                    'second_name' => $adminUserLogin . '_second_name',
+                    'third_name'  => $adminUserLogin . '_third_name',
                     'status'      => Profile::STATUS_ACTIVE,
                     'user_id'     => $adminUser->id,
                 ]
