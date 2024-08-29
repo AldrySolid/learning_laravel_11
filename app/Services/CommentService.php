@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\Comment\AfterStoreEvent;
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,8 @@ abstract class CommentService
         $comment = Comment::make($data);
         $comment->commentable()->associate($model);
         $comment->save();
+
+        AfterStoreEvent::dispatch($comment);
 
         return $comment;
     }
