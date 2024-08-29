@@ -58,7 +58,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 </h3>
                 <p>{{ post.content }}</p>
                 <div class="mb-4 mt-4">
-                    <Link :href="route('posts.edit', post)" class="inline-block px-3 py-2 bg-blue-600 text-white">Edit</Link>
+                    <Link :href="route('posts.show', post)" class="inline-block px-3 py-2 bg-gray-600 text-white">Show</Link>
+                    <Link :href="route('posts.edit', post)" class="inline-block ml-3 px-3 py-2 bg-blue-600 text-white">Edit</Link>
                     <Link @click.prevent="destroyPost(post, index)" class="inline-block ml-3 px-3 py-2 bg-red-600 text-white">Del</Link>
                 </div>
             </div>

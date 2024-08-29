@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasComment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Comment extends Model
 {
     use HasFactory;
+    use HasComment;
 
     const STATUS_MODERATE  = 1;
     const STATUS_PUBLISHED = 2;

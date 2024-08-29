@@ -3,15 +3,13 @@
 namespace App\Models;
 
 use App\Observers\PostObserver;
+use App\Traits\Models\HasComment;
 use App\Traits\Models\HasFilter;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @mixin IdeHelperPost
@@ -21,6 +19,7 @@ class Post extends Model
 {
     use HasFactory;
     use HasFilter;
+    use HasComment;
 
     protected $fillable = [
         'title',
@@ -44,15 +43,5 @@ class Post extends Model
     public function tags(): BelongsToMany
     {
         return $this->BelongsToMany(Tag::class)->withTimestamps();
-    }
-
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(
-            Comment::class,
-            'commentable',
-            'parent_class',
-            'parent_id'
-        );
     }
 }

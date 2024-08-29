@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Arr;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,6 +31,12 @@ class PostResource extends JsonResource
             'image_path'     => isset($this->image_path)
                 ? Storage::disk('public')->url($this->image_path)
                 : null,
+            'comments'       => Arr::mapWithKeys(
+                CommentResource::collection($this->comments)->resolve(),
+                function ($item) {
+                    return [$item['id'] => $item];
+                },
+            )
         ];
     }
 }

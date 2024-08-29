@@ -58,8 +58,12 @@ Route::controller(PostController::class)->group(
         Route::get('/posts/create', 'create')->name('posts.create');
         Route::get('/posts/show/{post}', 'show');
         Route::get('/posts/edit/{post}', 'edit')->name('posts.edit');
+        Route::get('/posts/show/{post}', 'show')->name('posts.show');
         Route::post('/posts/update/{post}', 'update')->name('posts.update');
         Route::delete('/posts/destroy/{post}', 'destroy')->name('posts.destroy');
+
+        Route::post('/posts/{post}/comments', 'commentStore')->name('posts.comments.store');
+        Route::post('/posts/{post}/comments/{parent_comment_id}', 'childCommentStore')->name('posts.childComments.store');
     }
 );
 
