@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Comment\StoreRequest;
+use App\Http\Requests\Comment\UpdateRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
@@ -22,17 +24,11 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store()
+    public function store(StoreRequest $request)
     {
-        $data = [
-            'profile_id'     => User::inRandomOrder()->get()->first()->id,
-            'parent_class'   => Post::class,
-            'parent_id'      => Post::inRandomOrder()->get()->first()->id,
-            'title'          => fake()->jobTitle(),
-            'content'        => fake()->text(255),
-            'count_likes'    => 0,
-            'is_commentable' => true,
-        ];
+        $data                   = $request->validated();
+        $data['count_likes']    = 0;
+        $data['is_commentable'] = true;
 
         return Comment::create($data);
     }
@@ -74,7 +70,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         //
     }
